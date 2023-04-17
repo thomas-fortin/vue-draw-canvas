@@ -4,6 +4,8 @@ VueJS Component for drawing on canvas.
 
 Support for both Vue 3 and Vue 2 + [Composition API](https://github.com/vuejs/composition-api)
 
+_Forked from razztyfication/vue-drawing-canvas package._
+
 ## Demo
 
 ### Vue 3

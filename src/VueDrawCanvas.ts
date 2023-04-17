@@ -45,7 +45,7 @@ export default defineComponent({
   name: 'VueDrawCanvas',
   props: {
     strokeType: {
-      type: String,
+      type: String as PropType<StrokeType>,
       default: 'dash',
       validator: (value: StrokeType): boolean => {
         return ['dash', 'line', 'rectangle', 'circle', 'triangle', 'half_triangle'].indexOf(value) !== -1;
