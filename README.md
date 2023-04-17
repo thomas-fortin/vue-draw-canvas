@@ -53,7 +53,7 @@ Then add it to your component files
 </template>
 
 <script>
-  import VueDrawCanvas from "vue-draw-canvas";
+  import VueDrawCanvas from "@thomas.fortin/vue-draw-canvas";
 
   export default {
     name: "MyComponent",

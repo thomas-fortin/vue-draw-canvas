@@ -1,5 +1,13 @@
 # Vue Draw Canvas
 
+## [v1.1.2](https://github.com/thomas-fortin/vue-draw-canvas/releases/tag/v1.1.2)
+
+- Handle CORS for external background images
+
+## [v1.1.1](https://github.com/thomas-fortin/vue-draw-canvas/releases/tag/v1.1.1)
+
+- Improve typings and namings
+
 ## [v1.1.0](https://github.com/thomas-fortin/vue-draw-canvas/releases/tag/v1.1.0)
 
 - Clean code and upgrade some packages
