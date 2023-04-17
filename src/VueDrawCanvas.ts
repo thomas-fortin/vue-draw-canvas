@@ -113,6 +113,10 @@ export default defineComponent({
       type: String,
       default: (): null | string => null
     },
+    backgroundImageCors: {
+      type: String,
+      default: (): null | string => null
+    },
     watermark: {
       type: Object,
       default: (): null | WatermarkData => null
@@ -222,6 +226,7 @@ export default defineComponent({
             return;
           }
           const image = new Image();
+          if (this.backgroundImageCors) image.crossOrigin = this.backgroundImageCors;
           image.src = this.backgroundImage;
           image.onload = () => {
             this.context.drawImage(image, 0, 0);
