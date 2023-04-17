@@ -1,13 +1,10 @@
 {
-  "name": "vue-draw-canvas",
+  "name": "@thomas-fortin/vue-draw-canvas",
   "version": "1.1.0",
-  "author": {
-    "name": "Thomas Fortin",
-    "email": "thomas.fortin.pro@gmail.com"
-  },
+  "author": "Thomas Fortin <thomas.fortin.pro@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thomas-fortin/vue-draw-canvas.git"
+    "url": "git+https://github.com/thomas-fortin/vue-draw-canvas.git"
   },
   "homepage": "https://github.com/thomas-fortin/vue-draw-canvas",
   "private": false,
@@ -83,5 +80,8 @@
   ],
   "engines": {
     "node": ">=12"
+  },
+  "bugs": {
+    "url": "https://github.com/thomas-fortin/vue-draw-canvas/issues"
   }
 }
