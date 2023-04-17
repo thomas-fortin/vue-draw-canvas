@@ -213,8 +213,8 @@ Then add it to your component files
 
 ## Changelog
 
-[Read here](https://github.com/thomas.fortin/vue-draw-canvas/blob/master/CHANGELOG.md)
+[Read here](https://github.com/thomas-fortin/vue-draw-canvas/blob/master/CHANGELOG.md)
 
 ## License
 
-[MIT](https://github.com/thomas.fortin/vue-draw-canvas/blob/master/LICENSE.md)
+[MIT](https://github.com/thomas-fortin/vue-draw-canvas/blob/master/LICENSE.md)
