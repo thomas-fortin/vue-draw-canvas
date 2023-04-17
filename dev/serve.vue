@@ -36,9 +36,10 @@ export default defineComponent({
       lineCap: 'round',
       lineJoin: 'round',
       backgroundColor: '#FFFFFF',
-      backgroundImage: null,
+      backgroundImage: 'https://placekitten.com/200/300',
       watermark: null,
-      additionalImages: []
+      additionalImages: [],
+      backgroundImageCors: 'Anonymous'
     }
   },
   mounted() {
@@ -102,6 +103,7 @@ export default defineComponent({
           :color="color"
           :background-color="backgroundColor"
           :background-image="backgroundImage"
+          :background-image-cors="backgroundImageCors"
           :watermark="watermark"
           :initial-image="initialImage"
           saveAs="png"
