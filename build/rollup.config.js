@@ -8,7 +8,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import babel from '@rollup/plugin-babel';
 import PostCSS from 'rollup-plugin-postcss';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import ttypescript from 'ttypescript';
 import typescript from 'rollup-plugin-typescript2';
 import minimist from 'minimist';
@@ -93,7 +93,7 @@ if (!argv.format || argv.format === 'es') {
     ...baseConfig,
     external,
     output: {
-      file: 'dist/vue-drawing-canvas.esm.js',
+      file: 'dist/vue-draw-canvas.esm.js',
       format: 'esm',
       exports: 'named',
     },
@@ -132,9 +132,9 @@ if (!argv.format || argv.format === 'cjs') {
     external,
     output: {
       compact: true,
-      file: 'dist/vue-drawing-canvas.ssr.js',
+      file: 'dist/vue-draw-canvas.ssr.js',
       format: 'cjs',
-      name: 'VueDrawingCanvas',
+      name: 'VueDrawCanvas',
       exports: 'auto',
       globals,
     },
@@ -155,9 +155,9 @@ if (!argv.format || argv.format === 'iife') {
     external,
     output: {
       compact: true,
-      file: 'dist/vue-drawing-canvas.min.js',
+      file: 'dist/vue-draw-canvas.min.js',
       format: 'iife',
-      name: 'VueDrawingCanvas',
+      name: 'VueDrawCanvas',
       exports: 'auto',
       globals,
     },

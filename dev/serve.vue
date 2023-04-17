@@ -1,12 +1,13 @@
 <script lang="ts">
 // @ts-nocheck
 import { defineComponent } from 'vue';
-import VueDrawingCanvas from '@/entry';
+import VueDrawCanvas from '@/entry';
+import type { StrokeType, LineCap, LineJoin } from '../src/VueDrawCanvas';
 
 export default defineComponent({
   name: 'ServeDev',
   components: {
-    VueDrawingCanvas
+    VueDrawCanvas
   },
   data() {
     return {
@@ -32,8 +33,8 @@ export default defineComponent({
       line: 5,
       color: '#000000',
       strokeType: 'dash',
-      lineCap: 'square',
-      lineJoin: 'miter',
+      lineCap: 'round',
+      lineJoin: 'round',
       backgroundColor: '#FFFFFF',
       backgroundImage: null,
       watermark: null,
@@ -41,15 +42,15 @@ export default defineComponent({
     }
   },
   mounted() {
-    if ('vue-drawing-canvas' in window.localStorage) {
-      this.initialImage = JSON.parse(window.localStorage.getItem('vue-drawing-canvas'))
+    if ('vue-draw-canvas' in window.localStorage) {
+      this.initialImage = JSON.parse(window.localStorage.getItem('vue-draw-canvas'))
     }
   },
   methods: {
     async setImage(event: Event) {
       let URL = window.URL;
       this.backgroundImage = URL.createObjectURL((<HTMLInputElement>event.target).files[0]);
-      await this.$refs.VueCanvasDrawing.redraw();
+      await this.$refs.VueCanvasDraw.redraw();
     },
     async setWatermarkImage(event: Event) {
       let URL = window.URL;
@@ -63,19 +64,19 @@ export default defineComponent({
           height: 400
         }
       }
-      await this.$refs.VueCanvasDrawing.redraw();
+      await this.$refs.VueCanvasDraw.redraw();
     },
     getCoordinate(event: Event) {
-      let coordinates = this.$refs.VueCanvasDrawing.getCoordinates(event);
+      let coordinates = this.$refs.VueCanvasDraw.getCoordinates(event);
       this.x = coordinates.x;
       this.y = coordinates.y;
     },
     getStrokes() {
-      window.localStorage.setItem('vue-drawing-canvas', JSON.stringify(this.$refs.VueCanvasDrawing.getAllStrokes()));
+      window.localStorage.setItem('vue-draw-canvas', JSON.stringify(this.$refs.VueCanvasDraw.getAllStrokes()));
       alert('Strokes saved, reload your browser to see the canvas with previously saved image')
     },
     removeSavedStrokes() {
-      window.localStorage.removeItem('vue-drawing-canvas');
+      window.localStorage.removeItem('vue-draw-canvas');
       alert('Strokes cleared from local storage')
     }
   }
@@ -87,8 +88,8 @@ export default defineComponent({
     <div class="flex-row">
       <div class="source">
         <p>Canvas:</p>
-        <vue-drawing-canvas
-          ref="VueCanvasDrawing"
+        <vue-draw-canvas
+          ref="VueCanvasDraw"
           v-model:image="image"
           :width="600"
           :height="400"
@@ -125,28 +126,28 @@ export default defineComponent({
             <span v-if="!disabled">Unlock</span>
             <span v-else>Lock</span>
           </button>
-          <button type="button" @click.prevent="$refs.VueCanvasDrawing.undo()">
+          <button type="button" @click.prevent="$refs.VueCanvasDraw.undo()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
               <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
             </svg>
             Undo
           </button>
-          <button type="button" @click.prevent="$refs.VueCanvasDrawing.redo()">
+          <button type="button" @click.prevent="$refs.VueCanvasDraw.redo()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
               <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
             </svg>
             Redo
           </button>
-          <button type="button" @click.prevent="$refs.VueCanvasDrawing.redraw()">
+          <button type="button" @click.prevent="$refs.VueCanvasDraw.redraw()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
               <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
               <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
             </svg>
             Refresh
           </button>
-          <button type="button" @click.prevent="$refs.VueCanvasDrawing.reset()">
+          <button type="button" @click.prevent="$refs.VueCanvasDraw.reset()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
               <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
             </svg>
@@ -264,7 +265,7 @@ export default defineComponent({
           </div>
         </div>
       </div>
-      
+
       <div class="output">
         <p>Output:</p>
         <img :src="image" style="border: solid 1px #000000;">

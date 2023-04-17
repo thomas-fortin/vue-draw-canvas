@@ -1,6 +1,6 @@
-MIT License
+# MIT License
 
-Copyright (c) 2021 Toni Oktoro & vue-drawing-canvas contributors
+Copyright (c) 2023 Thomas Fortin & vue-draw-canvas contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

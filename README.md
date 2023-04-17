@@ -1,31 +1,25 @@
-<h1>vue-drawing-canvas</h1>
+# vue-draw-canvas
 
 VueJS Component for drawing on canvas.
 
 Support for both Vue 3 and Vue 2 + [Composition API](https://github.com/vuejs/composition-api)
 
-<br><br>
-
-<h2>Demo</h2>
+## Demo
 
 ### Vue 3
 
-[![Vue 3 Drawing Canvas Demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vue-3-drawing-canvas-demo-ihmmz)
+[![Vue 3 Draw Canvas Demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vue-3-drawing-canvas-demo-ihmmz)
 
 ### Vue 2
 
 > Deployed on a nuxt container which have access to terminal
 
-<br>
-
-[![vue-drawing-canvas](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vue-drawing-canvas-p4slb)
+[![vue-draw-canvas](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vue-drawing-canvas-p4slb)
 
 > Note:
 > If you're using nuxt.js and receive error `Object(...) is not a function` please refer to this [issue](https://github.com/razztyfication/vue-drawing-canvas/issues/13)
 
-<br><br>
-
-<h1>Table of Contents</h1>
+## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -35,18 +29,16 @@ Support for both Vue 3 and Vue 2 + [Composition API](https://github.com/vuejs/co
 - [Changelog](#changelog)
 - [License](#license)
 
-<br><br>
-
-# Installation
+## Installation
 
 Install using package manager:
 
 ```bash
-npm install --save-dev vue-drawing-canvas
+npm install --save-dev vue-draw-canvas
 
 # or with Vue 2
 
-npm install --save-dev vue-drawing-canvas @vue/composition-api
+npm install --save-dev vue-draw-canvas @vue/composition-api
 ```
 
 Then add it to your component files
@@ -55,59 +47,51 @@ Then add it to your component files
 <!-- MyComponent.vue -->
 
 <template>
-  <vue-drawing-canvas ref="VueCanvasDrawing" />
+  <vue-draw-canvas ref="VueCanvasDraw" />
 </template>
 
 <script>
-  import VueDrawingCanvas from "vue-drawing-canvas";
+  import VueDrawCanvas from "vue-draw-canvas";
 
   export default {
     name: "MyComponent",
     components: {
-      VueDrawingCanvas,
+      VueDrawCanvas,
     },
   };
 </script>
 ```
 
-<br><br>
+## Usage
 
-# Usage
-
-## Props
-
-<br>
+### Props
 
 | Name             |         Type          |   Default Value    | Description                                                                                                                                                                                                                                                    |
 | ---------------- | :-------------------: | :----------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| canvasId         |        String         | `VueDrawingCanvas` | Specifies your canvas id                                                                                                                                                                                                                                       |
+| canvasId         |        String         | `VueDrawCanvas` | Specifies your canvas id                                                                                                                                                                                                                                       |
 | width            |    String, Number     |       `600`        | Specifies canvas width                                                                                                                                                                                                                                         |
 | height           |    String, Number     |       `400`        | Specifies canvas height                                                                                                                                                                                                                                        |
 | image            |        String         |                    | Your v-model to get canvas output to an base64 image                                                                                                                                                                                                           |
-| strokeType       |        String         |      `"dash"`      | Specifies stroke type to draw on canvas.<br><br>Accepted value `"dash"`, `"line"`, `"circle"`, `"square"`, `"triangle"`, `"half_triangle"`                                                                                                                     |
+| strokeType       |        String         |      `"dash"`      | Specifies stroke type to draw on canvas. Accepted values: `"dash"`, `"line"`, `"circle"`, `"rectangle"`, `"triangle"`, `"half_triangle"`                                                                                                                     |
 | fillShape        |        Boolean        |      `false`       | Specifies if the shape must be filled with the current fill style                                                                                                                                                                                              |
 | eraser           |        Boolean        |      `false`       | Props to change state from drawing to erasing                                                                                                                                                                                                                  |
 | color            |        String         |    `"#000000"`     | Specifies the color, gradient, or pattern to use for the strokes                                                                                                                                                                                               |
 | lineWidth        |        Number         |        `5`         | Sets the thickness of line                                                                                                                                                                                                                                     |
-| lineCap          |        String         |     `"round"`      | Determines the shape used to draw the end points of line.<br><br>Accepted value `"round"`, `"square"`, `"butt"`.<br>Refer to [this site](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap) for more information.              |
-| lineJoin         |        String         |     `"miter"`      | determines the shape used to join two line segments where they meet.<br><br>Accepted value `"round"`, `"miter"`, `"square"`.<br>Refer to [this site](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin) for more information. |
+| lineCap          |        String         |     `"round"`      | Determines the shape used to draw the end points of line. Accepted values: `"round"`, `"square"`, `"butt"`. Refer to [this site](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap) for more information.              |
+| lineJoin         |        String         |     `"miter"`      | determines the shape used to join two line segments where they meet. Accepted values: `"round"`, `"miter"`, `"bevel"`. Refer to [this site](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin) for more information. |
 | lock             |        Boolean        |      `false`       | Lock canvas for drawing                                                                                                                                                                                                                                        |
 | backgroundColor  |        String         |    `"#FFFFFF"`     | Set background color on your canvas                                                                                                                                                                                                                            |
-| backgroundImage  |        String         |                    | Set background image on your canvas<br><br>**_Be carefull for performance issue when using this props !!_**                                                                                                                                                    |
+| backgroundImage  |        String         |                    | Set background image on your canvas. **_Be carefull for performance issue when using this props !!_**                                                                                                                                                    |
 | initialImage     |         Array         |        `[]`        | Draw strokes and shapes from canvas you've worked before. [Demo](https://codesandbox.io/s/vue-drawing-canvas-107-rc1-dcoiy)                                                                                                                                    |
-| additionalImages |         Array         |        `[]`        | Accept Array of [watermark](#watermark-object) Object to draw either text or insert multiple image on canvas<br><br>**_Be carefull for performance issue when using this props !!_**                                                                           |
+| additionalImages |         Array         |        `[]`        | Accept Array of [watermark](#watermark-object) Object to draw either text or insert multiple image on canvas. **_Be carefull for performance issue when using this props !!_**                                                                           |
 | classes          | Array, String, Object |                    | Specifies your own classes to canvas                                                                                                                                                                                                                           |
 | styles           | Array, String, Object |                    | Specifies your own styles to canvas                                                                                                                                                                                                                            |
-| watermark        |        Object         |                    | Put watermark text/image on your image output<br><br>(see details in the next section below)                                                                                                                                                                   |
+| watermark        |        Object         |                    | Put watermark text/image on your image output (see details in the next section below)                                                                                                                                                                   |
 | saveAs           |        String         |      `"png"`       | Specifies output type. This props accept either `"png"` or `"jpeg"`                                                                                                                                                                                            |
 | outputWidth      |        Number         |   `this.width`     | Specifies image output width, if `undefined` then canvas width will be used                                                                                                                                                                                    |
 | outputHeight     |        Number         |   `this.height`    | Specifies image output height, if `undefined` then canvas height will be used                                                                                                                                                                                  |
 
-<br>
-
 ### Watermark Object
-
-<br>
 
 ```js
 {
@@ -215,11 +199,7 @@ Then add it to your component files
 }
 ```
 
-<br><br>
-
-## Methods
-
-<br>
+### Methods
 
 | Method Name           |          Return Value           | Description                                           |
 | --------------------- | :-----------------------------: | ----------------------------------------------------- |
@@ -231,14 +211,10 @@ Then add it to your component files
 | isEmpty()             |        `true` or `false`        | Get current canvas empty state                        |
 | getAllStrokes()       | _`Array of strokes and shapes`_ | Get all strokes and shapes from canvas                |
 
-<br><br>
+## Changelog
 
-# Changelog
+[Read here](https://github.com/thomas.fortin/vue-draw-canvas/blob/master/CHANGELOG.md)
 
-[Read here](https://github.com/razztyfication/vue-drawing-canvas/blob/master/CHANGELOG.md)
+## License
 
-<br><br>
-
-# License
-
-[MIT](https://github.com/razztyfication/vue-drawing-canvas/blob/master/LICENSE.md)
+[MIT](https://github.com/thomas.fortin/vue-draw-canvas/blob/master/LICENSE.md)
