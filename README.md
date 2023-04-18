@@ -36,11 +36,11 @@ _Forked from razztyfication/vue-drawing-canvas package._
 Install using package manager:
 
 ```bash
-npm install --save-dev vue-draw-canvas
+npm install --save-dev @thomas.fortin/vue-draw-canvas
 
 # or with Vue 2
 
-npm install --save-dev vue-draw-canvas @vue/composition-api
+npm install --save-dev @thomas.fortin/vue-draw-canvas @vue/composition-api
 ```
 
 Then add it to your component files
