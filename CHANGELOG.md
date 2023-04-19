@@ -1,5 +1,9 @@
 # Vue Draw Canvas
 
+## [v1.1.5](https://github.com/thomas-fortin/vue-draw-canvas/releases/tag/v1.1.5)
+
+- Update README for crossorigin use.
+
 ## [v1.1.4](https://github.com/thomas-fortin/vue-draw-canvas/releases/tag/v1.1.4)
 
 - Update README for installation guide

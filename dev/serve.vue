@@ -39,7 +39,7 @@ export default defineComponent({
       backgroundImage: 'https://placekitten.com/200/300',
       watermark: null,
       additionalImages: [],
-      backgroundImageCors: 'Anonymous'
+      backgroundImageCors: 'anonymous'
     }
   },
   mounted() {
