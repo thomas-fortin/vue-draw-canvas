@@ -1,34 +1,40 @@
-import { defineComponent, h, isVue2, PropType } from 'vue-demi';
+import { defineComponent, h, isVue2, PropType } from "vue-demi";
 
-export type StrokeType = 'dash' | 'line' | 'circle' | 'rectangle' | 'triangle' | 'half_triangle';
+export type StrokeType =
+  | "dash"
+  | "line"
+  | "circle"
+  | "rectangle"
+  | "triangle"
+  | "half_triangle";
 
-export type LineCap  = 'round' | 'square' | 'butt';
+export type LineCap = "round" | "square" | "butt";
 
-export type LineJoin = 'miter' | 'round' | 'bevel';
+export type LineJoin = "miter" | "round" | "bevel";
 
 interface WatermarkImageStyle {
-  width: number,
-  height: number
+  width: number;
+  height: number;
 }
 
 interface WatermarkFontStyle {
-  width: number,
-  lineHeight: number,
-  color: string,
-  font: string,
-  drawType: string,
-  textAlign: string,
-  textBaseline: string,
-  rotate: number
+  width: number;
+  lineHeight: number;
+  color: string;
+  font: string;
+  drawType: string;
+  textAlign: string;
+  textBaseline: string;
+  rotate: number;
 }
 
 interface WatermarkData {
-  type: string,
-  source: string,
-  x: number,
-  y: number,
-  imageStyle?: WatermarkImageStyle,
-  fontStyle?: WatermarkFontStyle
+  type: string;
+  source: string;
+  x: number;
+  y: number;
+  imageStyle?: WatermarkImageStyle;
+  fontStyle?: WatermarkFontStyle;
 }
 
 interface DataInit {
@@ -42,114 +48,123 @@ interface DataInit {
 }
 
 export default defineComponent({
-  name: 'VueDrawCanvas',
+  name: "VueDrawCanvas",
   props: {
     strokeType: {
       type: String as PropType<StrokeType>,
-      default: 'dash',
+      default: "dash",
       validator: (value: StrokeType): boolean => {
-        return ['dash', 'line', 'rectangle', 'circle', 'triangle', 'half_triangle'].indexOf(value) !== -1;
+        return (
+          [
+            "dash",
+            "line",
+            "rectangle",
+            "circle",
+            "triangle",
+            "half_triangle",
+          ].indexOf(value) !== -1
+        );
       },
     },
     fillShape: {
       type: Boolean,
-      default: () => false
+      default: () => false,
     },
     width: {
       type: [String, Number],
-      default: () => 600
+      default: () => 600,
     },
     height: {
       type: [String, Number],
-      default: () => 400
+      default: () => 400,
     },
     image: {
       type: String,
-      default: () => ''
+      default: () => "",
     },
     eraser: {
       type: Boolean,
-      default: () => false
+      default: () => false,
     },
     color: {
       type: String,
-      default: () => '#000000'
+      default: () => "#000000",
     },
     lineWidth: {
       type: Number,
-      default: () => 5
+      default: () => 5,
     },
     lineCap: {
       type: String as PropType<LineCap>,
-      default: 'round',
+      default: "round",
       validator: (value: LineCap): boolean => {
-        return ['round', 'square', 'butt'].indexOf(value) !== -1;
+        return ["round", "square", "butt"].indexOf(value) !== -1;
       },
     },
     lineJoin: {
       type: String as PropType<LineJoin>,
-      default: 'round',
+      default: "round",
       validator: (value: LineJoin): boolean => {
-        return ['miter', 'round', 'bevel'].indexOf(value) !== -1;
+        return ["miter", "round", "bevel"].indexOf(value) !== -1;
       },
     },
     lock: {
       type: Boolean,
-      default: () => false
+      default: () => false,
     },
     styles: {
       type: [Array, String, Object],
-      default: () => ''
+      default: () => "",
     },
     classes: {
       type: [Array, String, Object],
-      default: () => ''
+      default: () => "",
     },
     backgroundColor: {
       type: String,
-      default: () => '#FFFFFF'
+      default: () => "#FFFFFF",
     },
     backgroundImage: {
       type: String,
-      default: (): null | string => null
+      default: (): null | string => null,
     },
     backgroundImageCors: {
       type: String,
-      default: (): null | string => null
+      default: (): null | string => null,
     },
     watermark: {
       type: Object,
-      default: (): null | WatermarkData => null
+      default: (): null | WatermarkData => null,
     },
     saveAs: {
       type: String,
       validator: (value: string) => {
-        return ['jpeg', 'png'].indexOf(value) !== -1;
+        return ["jpeg", "png"].indexOf(value) !== -1;
       },
-      default: () => 'png'
+      default: () => "png",
     },
     canvasId: {
       type: String,
-      default: () => 'VueDrawCanvas'
+      default: () => "VueDrawCanvas",
     },
     initialImage: {
       type: Array,
-      default: (): any => []
+      default: (): any => [],
     },
     additionalImages: {
       type: Array,
-      default: (): any => []
+      default: (): any => [],
     },
     outputWidth: {
       type: Number,
-      default: () => 500
+      default: () => 500,
     },
     outputHeight: {
       type: Number,
-      default: () => 500
-    }
+      default: () => 500,
+    },
   },
-  emits: ['update:image'],
+  emits: ["update:image"],
   data(): DataInit {
     return {
       loadedImage: null,
@@ -157,23 +172,23 @@ export default defineComponent({
       context: null,
       images: [],
       strokes: {
-        type: '',
+        type: "",
         from: { x: 0, y: 0 },
         coordinates: [],
-        color: '',
-        width: '',
+        color: "",
+        width: "",
         fill: false,
-        lineCap: '',
-        lineJoin: ''
+        lineCap: "",
+        lineJoin: "",
       },
       guides: [],
-      trash: []
+      trash: [],
     };
   },
   watch: {
     backgroundImage: function () {
       this.loadedImage = null;
-    }
+    },
   },
   mounted() {
     this.setContext();
@@ -184,8 +199,10 @@ export default defineComponent({
   },
   methods: {
     async setContext() {
-      const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector(`#${this.canvasId}`);
-      this.context = this.context ? this.context : canvas.getContext('2d');
+      const canvas: HTMLCanvasElement = <HTMLCanvasElement>(
+        document.querySelector(`#${this.canvasId}`)
+      );
+      this.context = this.context ? this.context : canvas.getContext("2d");
 
       await this.setBackground();
     },
@@ -198,7 +215,9 @@ export default defineComponent({
     },
     drawAdditionalImages() {
       if (this.additionalImages && this.additionalImages.length > 0) {
-        const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector(`#${this.canvasId}`);
+        const canvas: HTMLCanvasElement = <HTMLCanvasElement>(
+          document.querySelector(`#${this.canvasId}`)
+        );
         this.additionalImages.forEach((watermarkObject: any) => {
           this.drawWatermark(canvas, this.context, watermarkObject);
         });
@@ -226,7 +245,8 @@ export default defineComponent({
             return;
           }
           const image = new Image();
-          if (this.backgroundImageCors) image.crossOrigin = this.backgroundImageCors;
+          if (this.backgroundImageCors)
+            image.crossOrigin = this.backgroundImageCors;
           image.src = this.backgroundImage;
           image.onload = () => {
             this.context.drawImage(image, 0, 0);
@@ -240,11 +260,16 @@ export default defineComponent({
     },
     getCoordinates(event: Event) {
       let x, y;
-      if ((<TouchEvent>event).touches && (<TouchEvent>event).touches.length > 0) {
-        const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector(`#${this.canvasId}`);
+      if (
+        (<TouchEvent>event).touches &&
+        (<TouchEvent>event).touches.length > 0
+      ) {
+        const canvas: HTMLCanvasElement = <HTMLCanvasElement>(
+          document.querySelector(`#${this.canvasId}`)
+        );
         const rect = canvas.getBoundingClientRect();
-        x = ((<TouchEvent>event).touches[0].clientX - rect.left);
-        y = ((<TouchEvent>event).touches[0].clientY - rect.top);
+        x = (<TouchEvent>event).touches[0].clientX - rect.left;
+        y = (<TouchEvent>event).touches[0].clientY - rect.top;
       } else {
         x = (<MouseEvent>event).offsetX;
         y = (<MouseEvent>event).offsetY;
@@ -252,7 +277,7 @@ export default defineComponent({
 
       return {
         x: x,
-        y: y
+        y: y,
       };
     },
     startDraw(event: Event) {
@@ -260,14 +285,19 @@ export default defineComponent({
         this.drawing = true;
 
         this.strokes = {
-          type: this.eraser ? 'eraser' : this.strokeType,
+          type: this.eraser ? "eraser" : this.strokeType,
           from: this.getCoordinates(event),
           coordinates: [],
           color: this.eraser ? this.backgroundColor : this.color,
           width: this.lineWidth,
-          fill: this.eraser || this.strokeType === 'dash'|| this.strokeType === 'line' ? false : this.fillShape,
+          fill:
+            this.eraser ||
+            this.strokeType === "dash" ||
+            this.strokeType === "line"
+              ? false
+              : this.fillShape,
           lineCap: this.lineCap,
-          lineJoin: this.lineJoin
+          lineJoin: this.lineJoin,
         };
         this.guides = [];
       }
@@ -278,49 +308,62 @@ export default defineComponent({
           this.setContext();
         }
         const coordinate = this.getCoordinates(event);
-        if (this.eraser || this.strokeType === 'dash') {
+        if (this.eraser || this.strokeType === "dash") {
           this.strokes.coordinates.push(coordinate);
           this.drawShape(this.context, this.strokes, false);
         } else {
           switch (this.strokeType) {
-            case 'line': {
-              this.guides = [
-                { x: coordinate.x, y: coordinate.y }
-              ];
+            case "line": {
+              this.guides = [{ x: coordinate.x, y: coordinate.y }];
               break;
             }
-            case 'rectangle': {
+            case "rectangle": {
               this.guides = [
                 { x: coordinate.x, y: this.strokes.from.y },
                 { x: coordinate.x, y: coordinate.y },
                 { x: this.strokes.from.x, y: coordinate.y },
-                { x: this.strokes.from.x, y: this.strokes.from.y }
+                { x: this.strokes.from.x, y: this.strokes.from.y },
               ];
               break;
             }
-            case 'triangle': {
-              const center = Math.floor((coordinate.x - this.strokes.from.x) / 2) < 0 ? Math.floor((coordinate.x - this.strokes.from.x) / 2) * -1 : Math.floor((coordinate.x - this.strokes.from.x) / 2);
-              const width = this.strokes.from.x < coordinate.x ? this.strokes.from.x + center : this.strokes.from.x - center;
+            case "triangle": {
+              const center =
+                Math.floor((coordinate.x - this.strokes.from.x) / 2) < 0
+                  ? Math.floor((coordinate.x - this.strokes.from.x) / 2) * -1
+                  : Math.floor((coordinate.x - this.strokes.from.x) / 2);
+              const width =
+                this.strokes.from.x < coordinate.x
+                  ? this.strokes.from.x + center
+                  : this.strokes.from.x - center;
               this.guides = [
                 { x: coordinate.x, y: this.strokes.from.y },
                 { x: width, y: coordinate.y },
-                { x: this.strokes.from.x, y: this.strokes.from.y }
+                { x: this.strokes.from.x, y: this.strokes.from.y },
               ];
               break;
             }
-            case 'half_triangle': {
+            case "half_triangle": {
               this.guides = [
                 { x: coordinate.x, y: this.strokes.from.y },
                 { x: this.strokes.from.x, y: coordinate.y },
-                { x: this.strokes.from.x, y: this.strokes.from.y }
+                { x: this.strokes.from.x, y: this.strokes.from.y },
               ];
               break;
             }
-            case 'circle': {
-              const radiusX = this.strokes.from.x - coordinate.x < 0 ? (this.strokes.from.x - coordinate.x) * -1 : this.strokes.from.x - coordinate.x;
+            case "circle": {
+              const radiusX =
+                this.strokes.from.x - coordinate.x < 0
+                  ? (this.strokes.from.x - coordinate.x) * -1
+                  : this.strokes.from.x - coordinate.x;
               this.guides = [
-                { x: this.strokes.from.x > coordinate.x ? this.strokes.from.x - radiusX : this.strokes.from.x + radiusX, y: this.strokes.from.y },
-                { x: radiusX, y: radiusX }
+                {
+                  x:
+                    this.strokes.from.x > coordinate.x
+                      ? this.strokes.from.x - radiusX
+                      : this.strokes.from.x + radiusX,
+                  y: this.strokes.from.y,
+                },
+                { x: radiusX, y: radiusX },
               ];
               break;
             }
@@ -340,11 +383,19 @@ export default defineComponent({
 
         this.context.beginPath();
         this.context.setLineDash([15, 15]);
-        if (this.strokes.type === 'circle') {
-          this.context.ellipse(this.guides[0].x, this.guides[0].y, this.guides[1].x, this.guides[1].y, 0, 0, Math.PI * 2);
+        if (this.strokes.type === "circle") {
+          this.context.ellipse(
+            this.guides[0].x,
+            this.guides[0].y,
+            this.guides[1].x,
+            this.guides[1].y,
+            0,
+            0,
+            Math.PI * 2
+          );
         } else {
           this.context.moveTo(this.strokes.from.x, this.strokes.from.y);
-          this.guides.forEach((coordinate: { x: number, y: number }) => {
+          this.guides.forEach((coordinate: { x: number; y: number }) => {
             this.context.lineTo(coordinate.x, coordinate.y);
           });
           if (closingPath) {
@@ -354,19 +405,33 @@ export default defineComponent({
         this.context.stroke();
       });
     },
-    drawShape(context: CanvasRenderingContext2D, strokes: any, closingPath: boolean) {
+    drawShape(
+      context: CanvasRenderingContext2D,
+      strokes: any,
+      closingPath: boolean
+    ) {
       context.strokeStyle = strokes.color;
       context.fillStyle = strokes.color;
       context.lineWidth = strokes.width;
-      context.lineJoin = strokes.lineJoin === undefined ? this.lineJoin : strokes.lineJoin;
-      context.lineCap = strokes.lineCap === undefined ? this.lineCap : strokes.lineCap;
+      context.lineJoin =
+        strokes.lineJoin === undefined ? this.lineJoin : strokes.lineJoin;
+      context.lineCap =
+        strokes.lineCap === undefined ? this.lineCap : strokes.lineCap;
       context.beginPath();
       context.setLineDash([]);
-      if (strokes.type === 'circle') {
-        context.ellipse(strokes.coordinates[0].x, strokes.coordinates[0].y, strokes.coordinates[1].x, strokes.coordinates[1].y, 0, 0, Math.PI * 2);
+      if (strokes.type === "circle") {
+        context.ellipse(
+          strokes.coordinates[0].x,
+          strokes.coordinates[0].y,
+          strokes.coordinates[1].x,
+          strokes.coordinates[1].y,
+          0,
+          0,
+          Math.PI * 2
+        );
       } else {
         context.moveTo(strokes.from.x, strokes.from.y);
-        strokes.coordinates.forEach((stroke: { x: number, y: number}) => {
+        strokes.coordinates.forEach((stroke: { x: number; y: number }) => {
           context.lineTo(stroke.x, stroke.y);
         });
         if (closingPath) {
@@ -381,7 +446,8 @@ export default defineComponent({
     },
     stopDraw() {
       if (this.drawing) {
-        this.strokes.coordinates = this.guides.length > 0 ? this.guides : this.strokes.coordinates;
+        this.strokes.coordinates =
+          this.guides.length > 0 ? this.guides : this.strokes.coordinates;
         this.images.push(this.strokes);
         this.redraw(true);
         this.drawing = false;
@@ -392,13 +458,13 @@ export default defineComponent({
       if (!this.lock) {
         this.images = [];
         this.strokes = {
-          type: '',
+          type: "",
           coordinates: [],
-          color: '',
-          width: '',
+          color: "",
+          width: "",
           fill: false,
-          lineCap: '',
-          lineJoin: ''
+          lineCap: "",
+          lineJoin: "",
         };
         this.guides = [];
         this.trash = [];
@@ -424,60 +490,99 @@ export default defineComponent({
       }
     },
     async redraw(output: boolean) {
-      output = typeof output !== 'undefined' ? output : true;
+      output = typeof output !== "undefined" ? output : true;
       await this.setBackground()
-      .then(() => {
-        this.drawAdditionalImages();
-      })
-      .then(() => {
-        const baseCanvas: HTMLCanvasElement = document.createElement('canvas');
-        const baseCanvasContext: CanvasRenderingContext2D | null = baseCanvas.getContext('2d');
-        baseCanvas.width = Number(this.width);
-        baseCanvas.height = Number(this.height);
+        .then(() => {
+          this.drawAdditionalImages();
+        })
+        .then(() => {
+          const baseCanvas: HTMLCanvasElement =
+            document.createElement("canvas");
+          const baseCanvasContext: CanvasRenderingContext2D | null =
+            baseCanvas.getContext("2d");
+          baseCanvas.width = Number(this.width);
+          baseCanvas.height = Number(this.height);
 
-        if (baseCanvasContext) {
-          this.images.forEach((stroke: any) => {
-            if (baseCanvasContext) {
-              baseCanvasContext.globalCompositeOperation = stroke.type === 'eraser' ? 'destination-out' : 'source-over';
-              if (stroke.type !== 'circle' || (stroke.type === 'circle' && stroke.coordinates.length > 0)) {
-                this.drawShape(baseCanvasContext, stroke, (stroke.type === 'eraser' || stroke.type === 'dash' || stroke.type === 'line' ? false : true));
+          if (baseCanvasContext) {
+            this.images.forEach((stroke: any) => {
+              if (baseCanvasContext) {
+                baseCanvasContext.globalCompositeOperation =
+                  stroke.type === "eraser" ? "destination-out" : "source-over";
+                if (
+                  stroke.type !== "circle" ||
+                  (stroke.type === "circle" && stroke.coordinates.length > 0)
+                ) {
+                  this.drawShape(
+                    baseCanvasContext,
+                    stroke,
+                    stroke.type === "eraser" ||
+                      stroke.type === "dash" ||
+                      stroke.type === "line"
+                      ? false
+                      : true
+                  );
+                }
               }
-            }
-          });
-          this.context.drawImage(baseCanvas, 0, 0, Number(this.width), Number(this.height));
-        }
-      })
-      .then(() => {
-        if (output) {
-          this.save();
-        }
-      });
+            });
+            this.context.drawImage(
+              baseCanvas,
+              0,
+              0,
+              Number(this.width),
+              Number(this.height)
+            );
+          }
+        })
+        .then(() => {
+          if (output) {
+            this.save();
+          }
+        });
     },
-    wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth : number, lineHeight: number) {
+    wrapText(
+      context: CanvasRenderingContext2D,
+      text: string,
+      x: number,
+      y: number,
+      maxWidth: number,
+      lineHeight: number
+    ) {
       const newLineRegex = /(\r\n|\n\r|\n|\r)+/g;
       const whitespaceRegex = /\s+/g;
-      const lines = text.split(newLineRegex).filter(word => word.length > 0);
+      const lines = text.split(newLineRegex).filter((word) => word.length > 0);
       for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-        const words = lines[lineNumber].split(whitespaceRegex).filter(word => word.length > 0);
-        let line = '';
+        const words = lines[lineNumber]
+          .split(whitespaceRegex)
+          .filter((word) => word.length > 0);
+        let line = "";
 
         for (let n = 0; n < words.length; n++) {
-          const testLine = line + words[n] + ' ';
+          const testLine = line + words[n] + " ";
           const metrics = context.measureText(testLine);
           const testWidth = metrics.width;
           if (testWidth > maxWidth && n > 0) {
-            if (this.watermark && (this.watermark.fontStyle && this.watermark.fontStyle.drawType && this.watermark.fontStyle.drawType === 'stroke') ) {
+            if (
+              this.watermark &&
+              this.watermark.fontStyle &&
+              this.watermark.fontStyle.drawType &&
+              this.watermark.fontStyle.drawType === "stroke"
+            ) {
               context.strokeText(line, x, y);
             } else {
               context.fillText(line, x, y);
             }
-            line = words[n] + ' ';
+            line = words[n] + " ";
             y += lineHeight;
           } else {
             line = testLine;
           }
         }
-        if (this.watermark && (this.watermark.fontStyle && this.watermark.fontStyle.drawType && this.watermark.fontStyle.drawType === 'stroke') ) {
+        if (
+          this.watermark &&
+          this.watermark.fontStyle &&
+          this.watermark.fontStyle.drawType &&
+          this.watermark.fontStyle.drawType === "stroke"
+        ) {
           context.strokeText(line, x, y);
         } else {
           context.fillText(line, x, y);
@@ -486,10 +591,12 @@ export default defineComponent({
       }
     },
     save() {
-      const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector(`#${this.canvasId}`);
+      const canvas: HTMLCanvasElement = <HTMLCanvasElement>(
+        document.querySelector(`#${this.canvasId}`)
+      );
       if (this.watermark) {
-        const temp = document.createElement('canvas');
-        const ctx: CanvasRenderingContext2D | null = temp.getContext('2d');
+        const temp = document.createElement("canvas");
+        const ctx: CanvasRenderingContext2D | null = temp.getContext("2d");
 
         if (ctx) {
           temp.width = Number(this.width);
@@ -499,51 +606,105 @@ export default defineComponent({
           this.drawWatermark(temp, ctx, <WatermarkData>this.watermark);
         }
       } else {
-        const temp = document.createElement('canvas');
-        const tempCtx: CanvasRenderingContext2D | null = temp.getContext('2d');
-        const tempWidth = this.outputWidth === undefined ? this.width : this.outputWidth;
-        const tempHeight = this.outputHeight === undefined ? this.height : this.outputHeight;
+        const temp = document.createElement("canvas");
+        const tempCtx: CanvasRenderingContext2D | null = temp.getContext("2d");
+        const tempWidth =
+          this.outputWidth === undefined ? this.width : this.outputWidth;
+        const tempHeight =
+          this.outputHeight === undefined ? this.height : this.outputHeight;
         temp.width = Number(tempWidth);
         temp.height = Number(tempHeight);
 
         if (tempCtx) {
-          tempCtx.drawImage(canvas, 0, 0, Number(tempWidth), Number(tempHeight));
-          this.$emit('update:image', temp.toDataURL(`image/${this.saveAs}`, 1));
+          tempCtx.drawImage(
+            canvas,
+            0,
+            0,
+            Number(tempWidth),
+            Number(tempHeight)
+          );
+          this.$emit("update:image", temp.toDataURL(`image/${this.saveAs}`, 1));
 
           return temp.toDataURL(`image/${this.saveAs}`, 1);
         }
       }
     },
-    drawWatermark(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, watermark: WatermarkData) {
-      if (watermark.type === 'Image') {
-        const imageWidth = watermark.imageStyle ? (watermark.imageStyle.width ? watermark.imageStyle.width : Number(this.width)) : Number(this.width);
-        const imageHeight = watermark.imageStyle ? (watermark.imageStyle.height ? watermark.imageStyle.height : Number(this.height)) : Number(this.height);
+    drawWatermark(
+      canvas: HTMLCanvasElement,
+      ctx: CanvasRenderingContext2D,
+      watermark: WatermarkData
+    ) {
+      if (watermark.type === "Image") {
+        const imageWidth = watermark.imageStyle
+          ? watermark.imageStyle.width
+            ? watermark.imageStyle.width
+            : Number(this.width)
+          : Number(this.width);
+        const imageHeight = watermark.imageStyle
+          ? watermark.imageStyle.height
+            ? watermark.imageStyle.height
+            : Number(this.height)
+          : Number(this.height);
 
         const image = new Image();
         image.src = watermark.source;
         image.onload = () => {
           if (watermark && ctx) {
-            ctx.drawImage(image, watermark.x, watermark.y, Number(imageWidth), Number(imageHeight));
+            ctx.drawImage(
+              image,
+              watermark.x,
+              watermark.y,
+              Number(imageWidth),
+              Number(imageHeight)
+            );
           }
 
-          const temp = document.createElement('canvas');
-          const tempCtx: CanvasRenderingContext2D | null = temp.getContext('2d');
-          const tempWidth = this.outputWidth === undefined ? this.width : this.outputWidth;
-          const tempHeight = this.outputHeight === undefined ? this.height : this.outputHeight;
+          const temp = document.createElement("canvas");
+          const tempCtx: CanvasRenderingContext2D | null =
+            temp.getContext("2d");
+          const tempWidth =
+            this.outputWidth === undefined ? this.width : this.outputWidth;
+          const tempHeight =
+            this.outputHeight === undefined ? this.height : this.outputHeight;
           temp.width = Number(tempWidth);
           temp.height = Number(tempHeight);
 
           if (tempCtx) {
-            tempCtx.drawImage(canvas, 0, 0, Number(tempWidth), Number(tempHeight));
-            this.$emit('update:image', temp.toDataURL(`image/${this.saveAs}`, 1));
+            tempCtx.drawImage(
+              canvas,
+              0,
+              0,
+              Number(tempWidth),
+              Number(tempHeight)
+            );
+            this.$emit(
+              "update:image",
+              temp.toDataURL(`image/${this.saveAs}`, 1)
+            );
             return temp.toDataURL(`image/${this.saveAs}`, 1);
           }
         };
-      } else if (watermark.type === 'Text') {
-        const font = watermark.fontStyle ? (watermark.fontStyle.font ? watermark.fontStyle.font : '20px serif') : '20px serif';
-        const align = watermark.fontStyle ? (watermark.fontStyle.textAlign ? watermark.fontStyle.textAlign : 'start') : 'start';
-        const baseline = watermark.fontStyle ? (watermark.fontStyle.textBaseline ? watermark.fontStyle.textBaseline : 'alphabetic') : 'alphabetic';
-        const color = watermark.fontStyle ? (watermark.fontStyle.color ? watermark.fontStyle.color : '#000000') : '#000000';
+      } else if (watermark.type === "Text") {
+        const font = watermark.fontStyle
+          ? watermark.fontStyle.font
+            ? watermark.fontStyle.font
+            : "20px serif"
+          : "20px serif";
+        const align = watermark.fontStyle
+          ? watermark.fontStyle.textAlign
+            ? watermark.fontStyle.textAlign
+            : "start"
+          : "start";
+        const baseline = watermark.fontStyle
+          ? watermark.fontStyle.textBaseline
+            ? watermark.fontStyle.textBaseline
+            : "alphabetic"
+          : "alphabetic";
+        const color = watermark.fontStyle
+          ? watermark.fontStyle.color
+            ? watermark.fontStyle.color
+            : "#000000"
+          : "#000000";
 
         ctx.font = font;
         ctx.textAlign = align as CanvasTextAlign;
@@ -557,42 +718,69 @@ export default defineComponent({
             centerX = watermark.x;
           }
           if (watermark.fontStyle && watermark.fontStyle.lineHeight) {
-            centerY = watermark.y + Math.floor(watermark.fontStyle.lineHeight / 2);
+            centerY =
+              watermark.y + Math.floor(watermark.fontStyle.lineHeight / 2);
           } else {
             centerY = watermark.y;
           }
 
           ctx.translate(centerX, centerY);
-          ctx.rotate(watermark.fontStyle.rotate * Math.PI / 180);
+          ctx.rotate((watermark.fontStyle.rotate * Math.PI) / 180);
           ctx.translate(centerX * -1, centerY * -1);
         }
 
-        if (watermark.fontStyle && watermark.fontStyle.drawType && watermark.fontStyle.drawType === 'stroke') {
+        if (
+          watermark.fontStyle &&
+          watermark.fontStyle.drawType &&
+          watermark.fontStyle.drawType === "stroke"
+        ) {
           ctx.strokeStyle = watermark.fontStyle.color;
           if (watermark.fontStyle && watermark.fontStyle.width) {
-            this.wrapText(ctx, watermark.source,  watermark.x,  watermark.y, watermark.fontStyle.width, watermark.fontStyle.lineHeight);
+            this.wrapText(
+              ctx,
+              watermark.source,
+              watermark.x,
+              watermark.y,
+              watermark.fontStyle.width,
+              watermark.fontStyle.lineHeight
+            );
           } else {
             ctx.strokeText(watermark.source, watermark.x, watermark.y);
           }
         } else {
           ctx.fillStyle = color;
           if (watermark.fontStyle && watermark.fontStyle.width) {
-            this.wrapText(ctx, watermark.source,  watermark.x,  watermark.y, watermark.fontStyle.width, watermark.fontStyle.lineHeight);
+            this.wrapText(
+              ctx,
+              watermark.source,
+              watermark.x,
+              watermark.y,
+              watermark.fontStyle.width,
+              watermark.fontStyle.lineHeight
+            );
           } else {
             ctx.fillText(watermark.source, watermark.x, watermark.y);
           }
         }
 
-        const temp = document.createElement('canvas');
-        const tempCtx: CanvasRenderingContext2D | null = temp.getContext('2d');
-        const tempWidth = this.outputWidth === undefined ? this.width : this.outputWidth;
-        const tempHeight = this.outputHeight === undefined ? this.height : this.outputHeight;
+        const temp = document.createElement("canvas");
+        const tempCtx: CanvasRenderingContext2D | null = temp.getContext("2d");
+        const tempWidth =
+          this.outputWidth === undefined ? this.width : this.outputWidth;
+        const tempHeight =
+          this.outputHeight === undefined ? this.height : this.outputHeight;
         temp.width = Number(tempWidth);
         temp.height = Number(tempHeight);
 
         if (tempCtx) {
-          tempCtx.drawImage(canvas, 0, 0, Number(tempWidth), Number(tempHeight));
-          this.$emit('update:image', temp.toDataURL(`image/${this.saveAs}`, 1));
+          tempCtx.drawImage(
+            canvas,
+            0,
+            0,
+            Number(tempWidth),
+            Number(tempHeight)
+          );
+          this.$emit("update:image", temp.toDataURL(`image/${this.saveAs}`, 1));
 
           return temp.toDataURL(`image/${this.saveAs}`, 1);
         }
@@ -603,20 +791,20 @@ export default defineComponent({
     },
     getAllStrokes() {
       return this.images;
-    }
+    },
   },
   render() {
     if (isVue2) {
-      return h('canvas', {
+      return h("canvas", {
         attrs: {
           id: this.canvasId,
           width: Number(this.width),
-          height: Number(this.height)
+          height: Number(this.height),
         },
         style: {
-          'touchAction': 'none',
+          touchAction: "none",
           // @ts-ignore
-          ...this.styles
+          ...this.styles,
         },
         class: this.classes,
         on: {
@@ -635,18 +823,18 @@ export default defineComponent({
           pointerleave: () => this.stopDraw(),
           pointercancel: () => this.stopDraw(),
         },
-        ...this.$props
+        ...this.$props,
       });
     }
 
-    return h('canvas', {
+    return h("canvas", {
       id: this.canvasId,
       height: Number(this.height),
       width: Number(this.width),
       style: {
-        'touchAction': 'none',
+        touchAction: "none",
         // @ts-ignore
-        ...this.styles
+        ...this.styles,
       },
       class: this.classes,
       onMousedown: ($event: Event) => this.startDraw($event),
@@ -662,7 +850,7 @@ export default defineComponent({
       onPointermove: ($event: Event) => this.draw($event),
       onPointerup: () => this.stopDraw(),
       onPointerleave: () => this.stopDraw(),
-      onPointercancel: () => this.stopDraw()
+      onPointercancel: () => this.stopDraw(),
     });
-  }
+  },
 });
